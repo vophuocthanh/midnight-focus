@@ -1,0 +1,153 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+/* shadcn ships this file without a package export, so it is imported by path. */
+@import "../../node_modules/shadcn/dist/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+@custom-variant fullscreen (&:fullscreen);
+@custom-variant in-fullscreen (:where(:fullscreen) &);
+
+/*
+ * Midnight Focus design tokens. This is the only place colors are defined.
+ * Components use the Tailwind/shadcn names mapped below, never raw hex values.
+ */
+:root {
+  --mf-background: #0b1020;
+  --mf-surface: #11182a;
+  --mf-elevated: #171f33;
+  --mf-accent: #8b5cf6;
+  --mf-accent-hover: #7c3aed;
+  --mf-info: #38bdf8;
+  --mf-success: #34d399;
+  --mf-danger: #f87171;
+  --mf-text: #f8fafc;
+  --mf-text-secondary: #94a3b8;
+  --mf-text-muted: #64748b;
+  --mf-border: rgba(148, 163, 184, 0.14);
+  --mf-glow: rgba(139, 92, 246, 0.35);
+
+  --background: var(--mf-background);
+  --foreground: var(--mf-text);
+  --card: var(--mf-surface);
+  --card-foreground: var(--mf-text);
+  --popover: var(--mf-elevated);
+  --popover-foreground: var(--mf-text);
+  --primary: var(--mf-accent);
+  --primary-foreground: var(--mf-text);
+  --secondary: var(--mf-elevated);
+  --secondary-foreground: var(--mf-text);
+  --muted: var(--mf-elevated);
+  --muted-foreground: var(--mf-text-secondary);
+  --accent: var(--mf-elevated);
+  --accent-foreground: var(--mf-text);
+  --destructive: var(--mf-danger);
+  --border: var(--mf-border);
+  --input: rgba(148, 163, 184, 0.08);
+  --ring: var(--mf-accent);
+  --radius: 0.875rem;
+
+  --chart-1: var(--mf-accent);
+  --chart-2: var(--mf-info);
+  --chart-3: var(--mf-success);
+  --chart-4: var(--mf-text-muted);
+  --chart-5: var(--mf-elevated);
+
+  --sidebar: var(--mf-surface);
+  --sidebar-foreground: var(--mf-text);
+  --sidebar-primary: var(--mf-accent);
+  --sidebar-primary-foreground: var(--mf-text);
+  --sidebar-accent: var(--mf-elevated);
+  --sidebar-accent-foreground: var(--mf-text);
+  --sidebar-border: var(--mf-border);
+  --sidebar-ring: var(--mf-accent);
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--mf-surface);
+  --color-elevated: var(--mf-elevated);
+  --color-accent-hover: var(--mf-accent-hover);
+  --color-info: var(--mf-info);
+  --color-success: var(--mf-success);
+  --color-danger: var(--mf-danger);
+  --color-text-secondary: var(--mf-text-secondary);
+  --color-text-muted: var(--mf-text-muted);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --ease-calm: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    background-image:
+      radial-gradient(60% 45% at 15% 0%, rgba(139, 92, 246, 0.12), transparent 70%),
+      radial-gradient(50% 40% at 100% 100%, rgba(56, 189, 248, 0.07), transparent 70%);
+    background-attachment: fixed;
+  }
+}
+
+/* Reduced motion: honour the OS setting and the in-app preference (html.reduce-motion). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
