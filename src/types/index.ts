@@ -2,6 +2,7 @@ export type TimerMode = "focus" | "shortBreak" | "longBreak";
 export type TimerStatus = "idle" | "running" | "paused";
 export type TaskPriority = "low" | "medium" | "high";
 export type Durations = Record<TimerMode, number>;
+export type AmbientSound = "off" | "rain" | "brown" | "pad" | "youtube";
 
 export interface Settings {
   /** Session lengths in minutes, per timer mode. */
@@ -12,6 +13,12 @@ export interface Settings {
   sound: boolean;
   notifications: boolean;
   reducedMotion: boolean;
+  /** Background sound that plays during focus sessions. */
+  ambientSound: AmbientSound;
+  /** 0 to 100. */
+  ambientVolume: number;
+  /** Link pasted for the "youtube" ambient option. Empty when unset. */
+  youtubeUrl: string;
 }
 
 export interface LearningTask {

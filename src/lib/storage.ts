@@ -1,4 +1,4 @@
-import type { LearningTask, PersistedState, SessionRecord, Settings, TaskPriority, TimerMode, TimerState, TimerStatus } from "../types";
+import type { AmbientSound, LearningTask, PersistedState, SessionRecord, Settings, TaskPriority, TimerMode, TimerState, TimerStatus } from "../types";
 import { DEFAULT_DURATIONS, DURATION_LIMITS, MODES, idleTimer } from "./timer";
 import { DEFAULT_SETTINGS } from "../state/reducer";
 
@@ -12,6 +12,8 @@ const isRecord = (v: unknown): v is Loose => typeof v === "object" && v !== null
 const isFiniteNumber = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
 const isMode = (v: unknown): v is TimerMode => (MODES as unknown[]).includes(v);
 const isPriority = (v: unknown): v is TaskPriority => v === "low" || v === "medium" || v === "high";
+const isAmbientSound = (v: unknown): v is AmbientSound =>
+  v === "off" || v === "rain" || v === "brown" || v === "pad" || v === "youtube";
 const orDefault = <T>(v: unknown, fallback: T, valid: (x: unknown) => boolean): T => (valid(v) ? (v as T) : fallback);
 
 function parseSettings(value: unknown): Settings {
@@ -35,6 +37,9 @@ function parseSettings(value: unknown): Settings {
     sound: bool(s.sound, DEFAULT_SETTINGS.sound),
     notifications: bool(s.notifications, DEFAULT_SETTINGS.notifications),
     reducedMotion: bool(s.reducedMotion, DEFAULT_SETTINGS.reducedMotion),
+    ambientSound: orDefault(s.ambientSound, DEFAULT_SETTINGS.ambientSound, isAmbientSound),
+    youtubeUrl: orDefault(s.youtubeUrl, DEFAULT_SETTINGS.youtubeUrl, (x) => typeof x === "string" && x.length <= 300),
+    ambientVolume: orDefault(s.ambientVolume, DEFAULT_SETTINGS.ambientVolume, (x) => isFiniteNumber(x) && x >= 0 && x <= 100),
   };
 }
 

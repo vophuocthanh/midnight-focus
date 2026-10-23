@@ -17,6 +17,10 @@ import { TaskPanel } from "./task-panel";
 import { TimerControls } from "./timer-controls";
 import { TimerRing } from "./timer-ring";
 import { FocusBackdrop } from "./focus-backdrop";
+import { AmbientControl } from "./ambient-control";
+import { useAmbientSound } from "@/hooks/use-ambient-sound";
+import { parseYouTubeId } from "@/lib/youtube";
+import { YouTubePlayer } from "./youtube-player";
 
 /** An action that would throw away the current session. Asked for confirmation when progress is meaningful. */
 type Discard = { kind: "reset" } | { kind: "skip" } | { kind: "mode"; mode: TimerMode };
@@ -37,7 +41,7 @@ const isEditableTarget = (target: EventTarget | null) =>
 
 export function FocusScreen() {
   const { state, dispatch } = useAppState();
-  const { timer, tasks, selectedTaskId, completion } = state;
+  const { timer, tasks, selectedTaskId, completion, settings } = state;
   const running = timer.status === "running";
   // Redraw every 250 ms only while a session runs, and once a second otherwise.
   const now = useNow(running ? 250 : 1000);
@@ -115,6 +119,11 @@ export function FocusScreen() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [timer.status, toggle, requestDiscard]);
 
+  // Background sound only plays during focus sessions, so it stops on pause and during breaks.
+  const inFocus = running && timer.mode === "focus";
+  useAmbientSound(settings.ambientSound, settings.ambientVolume / 100, inFocus);
+  const youtubeId = settings.ambientSound === "youtube" ? parseYouTubeId(settings.youtubeUrl) : null;
+
   const copy = discard ? discardCopy(discard) : null;
 
   return (
@@ -164,6 +173,15 @@ export function FocusScreen() {
           onReset={() => requestDiscard({ kind: "reset" })}
           onSkip={() => requestDiscard({ kind: "skip" })}
         />
+        <AmbientControl
+          sound={settings.ambientSound}
+          volume={settings.ambientVolume}
+          youtubeUrl={settings.youtubeUrl}
+          onSoundChange={(ambientSound) => dispatch({ type: "setSettings", settings: { ...settings, ambientSound } })}
+          onVolumeChange={(ambientVolume) => dispatch({ type: "setSettings", settings: { ...settings, ambientVolume } })}
+          onYoutubeUrlChange={(youtubeUrl) => dispatch({ type: "setSettings", settings: { ...settings, youtubeUrl } })}
+        />
+        {youtubeId && <YouTubePlayer videoId={youtubeId} playing={inFocus} volume={settings.ambientVolume} />}
       </div>
 
       <CompletionDialog

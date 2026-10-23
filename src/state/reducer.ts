@@ -9,6 +9,9 @@ export const DEFAULT_SETTINGS: Settings = {
   sound: true,
   notifications: false,
   reducedMotion: false,
+  ambientSound: "off",
+  ambientVolume: 40,
+  youtubeUrl: "",
 };
 
 export function createInitialState(): AppState {

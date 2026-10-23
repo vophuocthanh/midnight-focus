@@ -44,6 +44,13 @@ test("bad values fall back to defaults and bad items are dropped", () => {
   assert.equal(parsed.selectedTaskId, null);
 });
 
+test("ambient sound settings fall back when invalid", () => {
+  const parsed = parsePersisted({ ...valid, settings: { ambientSound: "disco", ambientVolume: 500 } });
+  assert.ok(parsed);
+  assert.equal(parsed.settings.ambientSound, "off");
+  assert.equal(parsed.settings.ambientVolume, DEFAULT_SETTINGS.ambientVolume);
+});
+
 test("a running timer without a deadline is reset to idle", () => {
   const parsed = parsePersisted({ ...valid, timer: { ...valid.timer, status: "running", endsAt: null } });
   assert.ok(parsed);
